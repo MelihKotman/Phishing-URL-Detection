@@ -18,4 +18,4 @@ def extract_features(df):
     df['digit_ratio'] = df['URL'].apply(lambda x : sum(c.isdigit() for c in x) / len(x)) 
     # c.isdigit() karakterin rakam olup olmadığını kontrol eder
 
-    return df
+    return df # Olan sütunları geri gönderiyoruz
