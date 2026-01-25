@@ -32,12 +32,12 @@ def plot_url_length_distribution(df):
     plt.figure(figsize = (12, 6))
     #Seaborn ile histogram çizimi
     sns.histplot(data = df,
-                x = 'URL_length',
-                hue = "Label",
-                bins = 100,
+                x = 'URL_length', # "URL_length" sütununu kullan
+                hue = "Label", #  Renkleri "Label" sütununa göre ayarla
+                bins = 100, # Kaç adet çubuk (bin) olacağı
                 kde = True, #kde: Kernel Density Estimate yani yoğunluk tahmini
-                palette= palette_good_bad,
-                element= 'bars' # Üst üste binmemesi için
+                palette= palette_good_bad, # Renk paleti
+                element= 'bars' # Çubuk stili (bars, step, polygon)
                 ) 
     
     plt.xlim(0, 150) # Çok uzun URL'ler bozmasın diye sınırla
@@ -66,14 +66,16 @@ def plot_special_char_breakdown(df):
     char_means = analiz_df.groupby('Label')[[f"'{c}' Sayısı" for c in chars_to_check]].mean().T
 
     
-    char_means.plot(kind = 'bar', color = [palette_good_bad['bad'], palette_good_bad['good']], figsize = (10, 6))
+    char_means.plot(kind = 'bar', # Çubuk grafik
+                    color = [palette_good_bad['bad'], palette_good_bad['good']], # Renkler
+                    figsize = (10, 6))  
     
     plt.title("URL İçindeki Özel Karakterlerin Ortalaması")
     plt.ylabel("Ortalama Adet")
     plt.xlabel("Karakter")
-    plt.xticks(rotation = 0)
-    plt.legend(["Bad (Phishing)", "Good (Güvenli)"])
-    plt.grid(axis = 'y', alpha = 0.5)
+    plt.xticks(rotation = 0) # X ekseni etiketlerini yatay yap
+    plt.legend(["Bad (Phishing)", "Good (Güvenli)"]) # Legend etiketleri
+    plt.grid(axis = 'y', alpha = 0.5, color = 'gray') # Y ekseni için grid ekle
     plt.savefig("visualization_pictures/special_char_breakdown.png") # Grafiği kaydet
     plt.show()
 
@@ -85,19 +87,23 @@ def plot_top_tlds(df):
 
     #URL'in sonundaki (TLD) alalım
     #1. Noktadan böl, son parçayı al
-    df['TLD'] = df['URL'].apply(lambda x : str(x).lower().split('.')[-1].split('/')[0])
+    df['TLD'] = df['URL'].apply(lambda x : str(x).lower().split('.')[-1].split('/')[0]) # . ile / arasındaki kısmı al
 
     # Sadece en çok geçen ilk 10 uzantıyı alıyoruz
-    top_10_tlds = df['TLD'].value_counts().head(10).index
-    filtered_df = df[df['TLD'].isin(top_10_tlds)]
+    top_10_tlds = df['TLD'].value_counts().head(10).index # İlk 10 TLD'yi al
+    filtered_df = df[df['TLD'].isin(top_10_tlds)] # Sadece bu TLD'leri içeren satırları al
 
     plt.figure(figsize = (12, 6))
-    sns.countplot(x = 'TLD', hue = 'Label', data = filtered_df,
-                  palette = palette_good_bad, order = filtered_df['TLD'].value_counts().index)
+    sns.countplot(x = 'TLD', # X ekseninde TLD'ler
+                  hue = 'Label', # Renkleri Label'a göre ayarla
+                  data = filtered_df, # Filtrelenmiş dataframe
+                  palette = palette_good_bad, # Renk paleti
+                  order = filtered_df['TLD'].value_counts().index # TLD'leri sayısına göre sırala
+                  )
     plt.title("En Yaygın 10 Domain Uzantısının Güvenlik Dağılımı")
     plt.xlabel("Domain Uzantısı (TLD)")
     plt.ylabel("URL Sayısı")
-    plt.legend(title = "Durum")
+    plt.legend(title = "Durum") # Legend başlığı
     plt.savefig("visualization_pictures/top_tlds.png") # Grafiği kaydet
     plt.show()
 
@@ -112,16 +118,16 @@ def plot_word_frequency(df):
 
     word_good = []
     for url in good_df['URL']:
-        tokens = re.split(r'[./\-_?=&%]', str(url).lower())
+        tokens = re.split(r'[./\-_?=&%]', str(url).lower()) # URL'i parçalara ayır regex ile 
         for token in tokens:
-            if token and token not in stop_words and not token.isdigit():
+            if token and token not in stop_words and not token.isdigit(): # Boş değilse, stop word değilse ve rakam değilse
                 word_good.append(token)
 
     word_bad = []
     for url in bad_df['URL']:
-        tokens = re.split(r'[./\-_?=&%]', str(url).lower())
+        tokens = re.split(r'[./\-_?=&%]', str(url).lower()) # URL'i parçalara ayır regex ile 
         for token in tokens:
-            if token and token not in stop_words and not token.isdigit():
+            if token and token not in stop_words and not token.isdigit(): # Boş değilse, stop word değilse ve rakam değilse
                 word_bad.append(token)
 
     
@@ -132,20 +138,30 @@ def plot_word_frequency(df):
     top_20_word_good = word_good_count.most_common(20)
     top_20_word_bad = word_bad_count.most_common(20)
 
-    _, axes = plt.subplots(1, 2, figsize=(16, 8))
+    _, axes = plt.subplots(1, 2, figsize=(16, 8)) # 1 satır, 2 sütunlu grafik alanı oluştur
 
     # Kötü Kelimeler Grafiği (Sol Taraf - axes[0])
-    df_bad = pd.DataFrame(top_20_word_bad, columns=['Kelime','Frekans'])
+    df_bad = pd.DataFrame(top_20_word_bad, columns=['Kelime','Frekans']) 
 
-    sns.barplot(x = 'Frekans', y = 'Kelime', data = df_bad, ax = axes[0], palette = 'Reds_r')
+    sns.barplot(x = 'Frekans', # X ekseni frekans
+                y = 'Kelime', # Y ekseni kelime
+                data = df_bad, # Veri kaynağı
+                ax = axes[0], # Sol grafik alanı
+                palette = 'Reds_r' # Kırmızı tonları
+                )
     axes[0].set_title("Phishing Sitelerinde En Sık Geçen 20 Kelime")
-    axes[0].grid(axis = 'x', linestyle = '--', alpha = 0.5)
+    axes[0].grid(axis = 'x', linestyle = '--', alpha = 0.5) # X ekseni için grid ekle
 
     df_good = pd.DataFrame(top_20_word_good, columns=['Kelime','Frekans'])
 
-    sns.barplot(x = 'Frekans', y = 'Kelime', data = df_good, ax = axes[1], palette = 'Greens_r')
+    sns.barplot(x = 'Frekans', # X ekseni frekans
+                y = 'Kelime', # Y ekseni kelime
+                data = df_good, # Veri kaynağı
+                ax = axes[1], # Sağ grafik alanı
+                palette = 'Greens_r' # Yeşil tonları
+                ) 
     axes[1].set_title("Güvenli Sitelerde En Sık Geçen 20 Kelime")
-    axes[1].grid(axis = 'x', linestyle = '--', alpha = 0.5)
+    axes[1].grid(axis = 'x', linestyle = '--', alpha = 0.5) # X ekseni için grid ekle
 
     plt.tight_layout()
     plt.savefig("visualization_pictures/word_frequency.png") # Grafiği kaydet
