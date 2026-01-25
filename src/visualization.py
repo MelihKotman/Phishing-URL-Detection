@@ -18,7 +18,7 @@ def plot_class_distribution(df):
     plt.title("URL Sınıf Dağılımı") # Başlık ekle
     plt.xlabel("Etiket")
     plt.ylabel("Sayı")
-    # plt.savefig("class_distribution.png") # Grafiği kaydet
+    plt.savefig("visualization_pictures/class_distribution.png") # Grafiği kaydet
     plt.show() # Grafiği göster
 
 def plot_url_length_distribution(df):
@@ -44,6 +44,7 @@ def plot_url_length_distribution(df):
     plt.title("URL Uzunluk Dağılımı")
     plt.xlabel("URL Uzunluğu")
     plt.ylabel("Frekans")
+    plt.savefig("visualization_pictures/url_length_distribution.png") # Grafiği kaydet
     plt.show()
 
 def plot_special_char_breakdown(df):
@@ -73,6 +74,7 @@ def plot_special_char_breakdown(df):
     plt.xticks(rotation = 0)
     plt.legend(["Bad (Phishing)", "Good (Güvenli)"])
     plt.grid(axis = 'y', alpha = 0.5)
+    plt.savefig("visualization_pictures/special_char_breakdown.png") # Grafiği kaydet
     plt.show()
 
 def plot_top_tlds(df):
@@ -96,6 +98,7 @@ def plot_top_tlds(df):
     plt.xlabel("Domain Uzantısı (TLD)")
     plt.ylabel("URL Sayısı")
     plt.legend(title = "Durum")
+    plt.savefig("visualization_pictures/top_tlds.png") # Grafiği kaydet
     plt.show()
 
 def plot_word_frequency(df):
@@ -105,7 +108,7 @@ def plot_word_frequency(df):
     good_df = df[df['Label'] == 'good'].copy()
     bad_df = df[df['Label'] == 'bad'].copy()
 
-    stop_words = {'com', 'www', 'http', 'https', 'net', 'org', 'html', 'htm', 'php', 'index'}
+    stop_words = {'com', 'www', 'http', 'https', 'net', 'org', 'html', 'htm', 'php', 'index'} # Çok fazlaca var ve işe yaramaz
 
     word_good = []
     for url in good_df['URL']:
@@ -145,6 +148,7 @@ def plot_word_frequency(df):
     axes[1].grid(axis = 'x', linestyle = '--', alpha = 0.5)
 
     plt.tight_layout()
+    plt.savefig("visualization_pictures/word_frequency.png") # Grafiği kaydet
     plt.show()
     
 
