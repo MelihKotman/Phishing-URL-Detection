@@ -5,16 +5,16 @@ from src.feature_extraction import extract_features
 print("Veri yükleniyor...")
 df = pd.read_csv("data/phishing_site_urls.csv")
 
-# --- DEBUG (HATA AYIKLAMA) KODU ---
-#print("--- Veri Seti Dedektifi ---")
-#print("1. Veri setindeki orjinal etiketler neler?:")
-#print(df['Label'].unique()) 
+#--- DEBUG (HATA AYIKLAMA) KODU ---
+print("--- Veri Seti Dedektifi ---")
+print("1. Veri setindeki orjinal etiketler neler?:")
+print(df['Label'].unique()) 
 
-#print(len(df[df['Label'] == 'bad']))
-#print("\n2. 'bad' diye aratınca kaç satır buluyorum?:")
+print(len(df[df['Label'] == 'bad']))
+print("\n2. 'bad' diye aratınca kaç satır buluyorum?:")
 
-#print("\n3. 'good' diye aratınca kaç satır buluyorum?:")
-#print(len(df[df['Label'] == 'good']))
+print("\n3. 'good' diye aratınca kaç satır buluyorum?:")
+print(len(df[df['Label'] == 'good']))
 
 print("Analiz yapılıyor...")
 plot_class_distribution(df)
