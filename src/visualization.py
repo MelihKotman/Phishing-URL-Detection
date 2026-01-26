@@ -18,7 +18,7 @@ def plot_class_distribution(df):
     plt.title("URL Sınıf Dağılımı") # Başlık ekle
     plt.xlabel("Etiket")
     plt.ylabel("Sayı")
-    plt.savefig("visualization_pictures/class_distribution.png") # Grafiği kaydet
+    plt.savefig("visualization/class_distribution.png") # Grafiği kaydet
     plt.show() # Grafiği göster
 
 def plot_url_length_distribution(df):
@@ -44,7 +44,7 @@ def plot_url_length_distribution(df):
     plt.title("URL Uzunluk Dağılımı")
     plt.xlabel("URL Uzunluğu")
     plt.ylabel("Frekans")
-    plt.savefig("visualization_pictures/url_length_distribution.png") # Grafiği kaydet
+    plt.savefig("visualization/url_length_distribution.png") # Grafiği kaydet
     plt.show()
 
 def plot_special_char_breakdown(df):
@@ -76,7 +76,7 @@ def plot_special_char_breakdown(df):
     plt.xticks(rotation = 0) # X ekseni etiketlerini yatay yap
     plt.legend(["Bad (Phishing)", "Good (Güvenli)"]) # Legend etiketleri
     plt.grid(axis = 'y', alpha = 0.5, color = 'gray') # Y ekseni için grid ekle
-    plt.savefig("visualization_pictures/special_char_breakdown.png") # Grafiği kaydet
+    plt.savefig("visualization/special_char_breakdown.png") # Grafiği kaydet
     plt.show()
 
 def plot_top_tlds(df):
@@ -104,7 +104,7 @@ def plot_top_tlds(df):
     plt.xlabel("Domain Uzantısı (TLD)")
     plt.ylabel("URL Sayısı")
     plt.legend(title = "Durum") # Legend başlığı
-    plt.savefig("visualization_pictures/top_tlds.png") # Grafiği kaydet
+    plt.savefig("visualization/top_tlds.png") # Grafiği kaydet
     plt.show()
 
 def plot_word_frequency(df):
@@ -164,7 +164,7 @@ def plot_word_frequency(df):
     axes[1].grid(axis = 'x', linestyle = '--', alpha = 0.5) # X ekseni için grid ekle
 
     plt.tight_layout()
-    plt.savefig("visualization_pictures/word_frequency.png") # Grafiği kaydet
+    plt.savefig("visualization/word_frequency.png") # Grafiği kaydet
     plt.show()
     
 
