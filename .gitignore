@@ -7,3 +7,5 @@ __pycache__/
 .env
 visualization_pictures/
 *.json
+src_db/model/phishing_model.keras
+src_db/model/tokenizer.pickle
