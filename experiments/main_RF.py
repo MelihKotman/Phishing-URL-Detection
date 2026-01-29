@@ -1,20 +1,19 @@
-from aem import con
+# Random Forest tabanlı Phishing URL Tespit Sistemi
+
 import pandas as pd
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src_csv.model.classical import train_and_evaluate
 
-from regex import W
-
-from src.model import train_and_evaluate
-
-from sympy import plot
-from src.visualization import (
+from src_csv.visualization import (
     plot_class_distribution,
     plot_url_length_distribution,
     plot_special_char_breakdown,
     plot_top_tlds,
     plot_word_frequency
 )
-from src.feature_extraction import extract_features
+from src_csv.feature_extraction import extract_features
 
 DATA_PATH = "data/phishing_site_urls.csv" # Veri dosyasının yolu
 SAMPLE_SIZE = None # Eğitim için örnek boyutu
