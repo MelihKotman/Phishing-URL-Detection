@@ -11,7 +11,7 @@
 
 ## 📖 Project Overview
 
-Phishing attacks are evolving, and static blocklists are no longer sufficient. This project explores two distinct paradigms to solve this problem using a dataset of **~550,000 URLs**:
+Phishing attacks are evolving, and static blocklists are no longer sufficient. This project explores two distinct paradigms to solve this problem using a dataset of **549,381 URLs**:
 
 1.  **Phase 1: Feature-Based Engineering (Random Forest):** Extracting mathematical features (entropy, length, symbol count) to classify URLs based on statistical properties.
 2.  **Phase 2: Character-Level NLP (Deep Learning):** Treating URLs as raw text sequences and using **1D-CNNs** to learn morphological patterns automatically.
@@ -28,7 +28,7 @@ I implemented and tested both methodologies to find the best solution. Here is t
 | **Methodology** | Manual Feature Extraction | Character-Level Embeddings |
 | **Input Data** | Numerical (Length, Entropy, etc.) | Raw Text Sequence (Tokenized) |
 | **Data Structure** | CSV (Static File) | SQLite Database (Dynamic) |
-| **Accuracy** | **~86.26%** | **~96.50%** 🏆 |
+| **Accuracy** | **~86.26%** | **~97.26%** 🏆 |
 | **Key Strength** | Interpretable (We know *why*) | Pattern Recognition (High Accuracy) |
 | **Weakness** | Manual feature selection is tedious | Requires more computational power |
 

@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import os
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import Sequential # type: ignore (importing Sequential model)
 from tensorflow.keras.layers import Dense, Dropout, Embedding, Conv1D, GlobalMaxPooling1D # type: ignore (importing layers)
@@ -66,8 +68,11 @@ def train_deep_learning_model(df):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']) # İkili sınıflandırma için binary_crossentropy kaybı
 
     print("Model eğitimi başladı...")
-    # Epochs = 3 yani 3 kez tüm eğitim verisi üzerinde geçiş yap
-    model.fit(X_train, y_train, epochs=3, batch_size=64, validation_data=(X_test, y_test)) # Eğitim sırasında doğrulama verisi kullan
+    # Epochs = 10 yani 10 kez tüm eğitim verisi üzerinde geçiş yap
+    history = model.fit(X_train, y_train, epochs=10, batch_size=64, validation_data=(X_test, y_test)) # Eğitim sırasında doğrulama verisi kullan
+
+    # Accuracy ve Loss grafiklerini çiz
+    plot_accuracy_loss(history)
 
     print("Model eğitimi tamamlandı. Değerlendirme başladı...")
     y_pred_prob = model.predict(X_test) # Tahmin olasılıklarını al
@@ -79,3 +84,44 @@ def train_deep_learning_model(df):
     return model, tokenizer
 
 
+def plot_accuracy_loss(history):
+    """
+    1D-CNN modelinin eğitim sürecindeki Accuracy ve Loss grafiklerini çizer.
+    """
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+    # Accuracy Grafiği
+    axes[0].plot(history.history['accuracy'], label='Training Accuracy', color='blue', linewidth=2)
+    axes[0].plot(history.history['val_accuracy'], label='Validation Accuracy', color='orange', linewidth=2)
+    axes[0].set_title('1D-CNN Model Accuracy', fontsize=14, fontweight='bold')
+    axes[0].set_xlabel('Epoch', fontsize=12)
+    axes[0].set_ylabel('Accuracy', fontsize=12)
+    axes[0].legend(loc='lower right', fontsize=10)
+    axes[0].grid(True, alpha=0.3)
+    axes[0].set_ylim([0, 1])
+
+    # Loss Grafiği
+    axes[1].plot(history.history['loss'], label='Training Loss', color='blue', linewidth=2)
+    axes[1].plot(history.history['val_loss'], label='Validation Loss', color='orange', linewidth=2)
+    axes[1].set_title('1D-CNN Model Loss', fontsize=14, fontweight='bold')
+    axes[1].set_xlabel('Epoch', fontsize=12)
+    axes[1].set_ylabel('Loss', fontsize=12)
+    axes[1].legend(loc='upper right', fontsize=10)
+    axes[1].grid(True, alpha=0.3)
+
+    plt.tight_layout()
+
+    # Grafik kaydetme
+    save_path = 'visualization/Feature_Extraction/1D_CNN_Accuracy_Loss.png'
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    print(f"\nGrafik kaydedildi: {save_path}")
+    
+    plt.show()
+
+    # Son epoch sonuçlarını yazdır
+    print(f"\nSon Epoch Sonuçları:")
+    print(f"  Training Accuracy: {history.history['accuracy'][-1]:.4f}")
+    print(f"  Validation Accuracy: {history.history['val_accuracy'][-1]:.4f}")
+    print(f"  Training Loss: {history.history['loss'][-1]:.4f}")
+    print(f"  Validation Loss: {history.history['val_loss'][-1]:.4f}")
