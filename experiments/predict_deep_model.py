@@ -36,45 +36,39 @@ def load_ai_assets():
     return model, tokenizer
     
 def predict_url(url, model, tokenizer):
-    """Verilen URL'in Phishing olup olmadığını tahmin eder."""
-    WHITELIST_DOMAINS = {
-    "google.com", "www.google.com", "youtube.com", "www.youtube.com",
-    "facebook.com", "www.facebook.com", "amazon.com", "twitter.com",
-    "instagram.com", "linkedin.com", "wikipedia.org", "yahoo.com",
-    "yandex.com", "yandex.ru", "whatsapp.com", "bing.com", "live.com",
-    "microsoft.com", "apple.com", "github.com", "stackoverflow.com",
-    "ibu.edu.tr", "www.ibu.edu.tr", "turkiye.gov.tr", "enabiz.gov.tr"
-}   
-    clean_url = url.replace("https://", "").replace("http://", "").replace("www.", "").strip("/")
-    
-    # 1. Beyaz Liste Kontrolü (Yapay Zekadan Önce)
-    if clean_url in WHITELIST_DOMAINS:
-        print(f"\n🔍 Analiz Edilen: {url}")
-        print("🛡️  SONUÇ: GÜVENLİ (Beyaz Listede Mevcut)")
-        print("   -> Yapay zeka yorulmadı, bilinen güvenli site.")
-        print("-" * 40)
+    """
+    Verilen URL'in Phishing olup olmadığını tahmin eder.
+    """
+    POPULAR_DOMAINS = [
+    "google.com", "youtube.com", "github.com",
+    "wikipedia.org", "spotify.com", "apple.com"
+]
+    domain = url.replace("https://", "").replace("http://", "").split("/")[0]
+
+    if domain in POPULAR_DOMAINS:
+        print("SONUÇ: GÜVENLİ (BENIGN)")
+        print("-> Popular domain whitelist")
         return
 
-    # 1. Ön İşleme (Preprocessing)
-    # URL'i string yap, listeye koy (Tokenizer liste bekler)
-    sequences = tokenizer.texts_to_sequences([str(clean_url)])
-    
-    # Uzunluğu sabitle (Padding)
-    padded = pad_sequences(sequences, maxlen=MAX_LEN)
-    
-    # 2. Tahmin (Prediction)
+    sequences = tokenizer.texts_to_sequences([str(url)])
+    padded = pad_sequences(sequences, maxlen=MAX_LEN, padding='post', truncating='post')
     prediction = model.predict(padded, verbose=0)[0][0]
-    
-    # 3. Sonuç Yorumlama
-    print(f"\n🔍 Analiz Edilen: {clean_url}")
+
+    domain = url.replace("https://", "").replace("http://", "").split("/")[0]
+    domain_len = len(domain)
+
+    if domain_len <= 15:
+        threshold = 0.85
+    else:
+        threshold = 0.65
+
+    print(f"\n🔍 Analiz Edilen: {url}")
     print(f"📊 Phishing Skoru: %{prediction * 100:.2f}")
-    
-    if prediction > 0.5:
-        print("SONUÇ: TEHLİKELİ (PHISHING) ")
-        print("   -> Bu site bilgilerinizi çalmaya çalışabilir!")
+
+    if prediction > threshold:
+        print("SONUÇ: TEHLİKELİ (PHISHING)")
     else:
         print("SONUÇ: GÜVENLİ (BENIGN)")
-        print("   -> Temiz görünüyor.")
     print("-" * 40)
 
 
@@ -85,10 +79,10 @@ def main():
     print("-" * 40)
 
     while True:
-        url = input("🔗 Kontrol edilecek URL'i girin: ")
+        url = input("Kontrol edilecek URL'i girin: ")
         
         if url.lower() in ['q', 'exit', 'quit']:
-            print("👋 Güle güle!")
+            print("Güle güle!")
             break
         
         if len(url.strip()) == 0:
