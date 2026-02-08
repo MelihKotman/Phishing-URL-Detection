@@ -51,9 +51,37 @@ Located in `src_db/`, this module uses **Natural Language Processing (NLP)**:
 * **Conv1D Layer:** Scans the URL like an image to find local correlations (e.g., `.exe` inside a path or DGA patterns).
 
 ### 3. The Final Hybrid Engine (Production Ready)
-The `predict_deep_model.py` script implements a real-world logic:
-1.  **Whitelist Filter:** Checks if the domain is a known giant (e.g., `google.com`, `ibu.edu.tr`). If yes, bypass AI (Zero Latency).
-2.  **AI Analysis:** If the domain is unknown, the CNN model scans the URL for threats.
+The `predict_deep_model.py` script implements a **real-world hybrid cybersecurity pipeline**, combining rule-based logic with deep learning inference:
+
+1. **URL Normalization Layer**
+   - All inputs are canonicalized (`http/https` removal, lowercase conversion, `www.` stripping).
+   - Ensures that semantically identical URLs (e.g., `google.com`, `www.google.com`) are treated consistently.
+   - Prevents tokenizer confusion and reduces false positives caused by formatting variance.
+
+2. **High-Confidence Whitelist Filter (Zero Latency Path)**
+   - A curated whitelist of globally trusted domains (`google.com`, `microsoft.com`, `apple.com`, etc.).
+   - If a match occurs, the system immediately classifies the URL as **BENIGN** without invoking the model.
+   - This mirrors **industry-grade security systems** where deterministic rules precede AI inference.
+
+3. **Adaptive AI Threat Analysis**
+   - Unknown or non-whitelisted domains are passed to the **Character-Level CNN**.
+   - The model evaluates morphological patterns such as:
+     - Token entropy and randomness
+     - Suspicious keyword injection (`login`, `verify`, `secure`)
+     - Domain structure anomalies
+   - **Dynamic decision thresholds** are applied based on URL length:
+     - Short domains require higher confidence to be flagged as phishing.
+     - Long and complex URLs are classified more aggressively.
+
+4. **Final Verdict Engine**
+   - Outputs a probabilistic **Phishing Score (%)** instead of a binary label.
+   - This design allows future extensions such as:
+     - `UNCERTAIN` risk category
+     - Human-in-the-loop review
+     - Ensemble scoring with classical ML models
+
+> **Design Philosophy:**  
+> This hybrid approach prioritizes **precision on well-known domains**, **generalization on unseen URLs**, and **low-latency inference**, making it suitable for real-world deployment rather than academic-only evaluation.
 
 ---
 
